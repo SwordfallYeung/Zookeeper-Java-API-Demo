@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author y15079
  * @create 2018-03-17 15:20
- * @desc  分布式HA应用  客户端
+ * @desc  分布式应用系统服务器上下线动态感知程序开发  客户端
  **/
 public class DistributedClient {
 

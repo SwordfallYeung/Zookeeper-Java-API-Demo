@@ -5,7 +5,7 @@ import org.apache.zookeeper.*;
 /**
  * @author y15079
  * @create 2018-03-17 1:12
- * @desc 分布式HA应用  服务端
+ * @desc 分布式应用系统服务器上下线动态感知程序开发  服务端
  **/
 public class DistributedServer {
 
