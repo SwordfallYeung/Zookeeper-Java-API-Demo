@@ -25,7 +25,8 @@ public class DistributedServer {
 				//收到事件通知后的回调函数（应该是我们自己的事件处理逻辑）
 				System.out.println(event.getType() + "---" + event.getPath());
 				try {
-					zk.getChildren("/",true);
+					//挂掉了一台重新注册监听，实现循环监听
+					zk.getChildren("/",true);   //有点像递归，在监听函数里面注册监听，就会不断循环。
 				} catch (Exception e) {
 				}
 			}
