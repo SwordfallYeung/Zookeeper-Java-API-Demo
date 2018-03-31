@@ -18,6 +18,8 @@ public class DistributedClient {
 	private static final int sessionTimeout = 2000;
 	private static final String parentNode = "/servers";
 	//注意：加volatile的意义何在？保持一致性
+	//如果不使用volatile，serverList是保存在堆内存中，多线程访问serverList是把它拷贝各自的栈内存中读取的,这会导致不同线程访问到的serverList不同
+	//如果使用volatile，则堆内存中的serverList不会被多线程拷贝到各自的栈内存中，统一访问堆内存中的serverList，保持了一致性
 	private volatile List<String> serverList;
 	private ZooKeeper zk = null;
 
@@ -31,7 +33,7 @@ public class DistributedClient {
 				//收到事件通知后的回调函数（应该是我们自己的事件处理逻辑）
 				try {
 					//重新更新服务器列表，并且注册了监听
-					getServerList();
+					getServerList(); //有点像递归，在监听函数里面注册监听，就会不断循环
 				} catch (Exception e) {
 				}
 			}

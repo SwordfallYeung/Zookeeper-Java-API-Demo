@@ -10,6 +10,8 @@ import java.util.Random;
  * @author y15079
  * @create 2018-03-17 18:40
  * @desc 分布式共享锁 单线程的
+ *
+ * zookeeper的监听是一次性监听
  **/
 public class DistributedClientLock {
 	//会话超时
@@ -35,6 +37,7 @@ public class DistributedClientLock {
 					//判断事件类型，此处只处理子节点变化事件
 					if (watchedEvent.getType() == Event.EventType.NodeChildrenChanged && watchedEvent.getPath().equals("/" + groupNode)){
 						//获取子节点，并对父节点进行监听, 开始监听，监听锁是否有变化
+						//有点像递归，在监听函数里面注册监听，就会不断循环
 						List<String> childrenNodes = zk.getChildren("/" + groupNode, true);
 						String thisNode = thisPath.substring(("/" + groupNode + "/").length()); //获取父目录下的子节点路径，不带父目录
 						//去比较是否自己是最小id， 约定id最小最先拿到锁
@@ -59,7 +62,7 @@ public class DistributedClientLock {
 		//wait一小会，便于观察
 		Thread.sleep(new Random().nextInt(1000));
 
-		//从zk的锁目录下，获取所有子节点，并且监听子节点的变化， 开始监听，监听锁是否有变化
+		//从zk的锁目录下，获取所有子节点，并且监听子节点的变化， 开始监听，监听锁是否有变化， 一次性监听
 		List<String> childrenNodes = zk.getChildren("/" + groupNode, true);
 
 		//列表中只有一个子节点，那肯定就是thisPath，说明client获得锁
